@@ -1,0 +1,26 @@
+{
+    "name": "streak",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon index.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "ejs": "^3.1.10",
+        "express": "^4.19.2",
+        "sqlite3": "^5.1.7",
+        "sqlite3orm": "^2.7.2"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.12.7",
+        "@types/sqlite3": "^3.1.11",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.5"
+    }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+    </head>
+    <body>
+        <h1><%= title %></h1>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Streak</th>
+                <th>Response</th>
+                <th>Date</th>
+            </tr>
+            <% user.forEach((user) => { %>
+            <tr>
+                <td><%= user.id %></td>
+                <td><%= user.name %></td>
+                <td><%= user.count %></td>
+                <td><%= user.response %></td>
+                <td><%= user.date %></td>
+            </tr>
+            <% }); %>
+        </table>
+    </body>
+</html>
