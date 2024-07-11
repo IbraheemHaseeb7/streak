@@ -21,7 +21,6 @@ jobs:
           VM_ADDRESS: ${{ secrets.VM_ADDRESS }}
         run: |
           echo "Printing something: $VM_ADDRESS"
-          echo "Printing something: $VM_SECRET"
           echo "$VM_SECRET" > id_rsa.pem
           chmod 600 id_rsa.pem
           ssh -i id_rsa.pem $VM_ADDRESS
