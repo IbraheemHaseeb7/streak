@@ -9,21 +9,28 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
 jobs:
-  connect_to_vm:
+  connect-azure-vm:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - name: Get SSH key from secrets
-        env: 
-          VM_SECRET: ${{ secrets.VM_SECRET }}
-          VM_ADDRESS: ${{ secrets.VM_ADDRESS }}
-        run: |
-          echo "$VM_SECRET" > id_rsa.pem
-          chmod 600 id_rsa.pem
-          ssh -tt -i id_rsa.pem $VM_ADDRESS
-          touch test.txt
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Install SSH client
+      run: sudo apt-get install -y ssh
+
+    - name: Add SSH key
+      run: echo "${{ secrets.VM_SECRET }}" > mykey && chmod 600 mykey
+
+    - name: Connect to Azure VM and execute commands
+      run: |
+        ssh -i mykey -o StrictHostKeyChecking=no ${{ secrets.VM_ADDERSS }} "echo 'Connected to Azure VM!'"
           
         
     
