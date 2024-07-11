@@ -22,7 +22,7 @@ jobs:
         run: |
           echo "$VM_SECRET" > id_rsa.pem
           chmod 600 id_rsa.pem
-          ssh -t -i id_rsa.pem $VM_ADDRESS
+          ssh -tt -i id_rsa.pem $VM_ADDRESS
           touch test.txt
           
         
