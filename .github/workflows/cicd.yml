@@ -20,8 +20,9 @@ jobs:
           VM_SECRET: ${{ secrets.VM_SECRET }}
           VM_ADDRESS: ${{ secrets.VM_ADDRESS }}
         run: |
-          ssh -i $VM_SECRET $VM_ADDRESS &&
-          yes &&
+          echo "$VM_SECRET" > id_rsa
+          chmod 600 id_rsa
+          ssh -i id_rsa $VM_ADDRESS
           touch test.txt
           
         
