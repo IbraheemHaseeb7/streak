@@ -1,42 +1,59 @@
-name: CI/CD pipeline to Azure VM
+name: Node.js CI/CD
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types:
-      - opened
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
 jobs:
-  connect-azure-vm:
+
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-    # - name: Log in to Azure
-    #   uses: azure/login@v1
-    #   with:
-    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
 
-    - name: Install SSH client
-      run: sudo apt-get install -y ssh
+    - name: Install dependencies
+      run: npm ci
 
-    - name: Add SSH key
-      run: echo "${{ secrets.VM_SECRET }}" > mykey && chmod 600 mykey
+    - name: Build application
+      run: npm run build
 
-    - name: Connect to Azure VM and execute commands
-      run: |
-        ssh -i mykey -o StrictHostKeyChecking=no ${{ secrets.VM_ADDERSS }} "echo 'Connected to Azure VM!'"
-          
-        
-    
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Install Node Modules
-  #       run: npm ci
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: |
+          **/!(node_modules)/**
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: dist
+        path: .
+
+    - name: Azure VM deployment
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure VM
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: github-actions
+        publish-profile: ${{ secrets.AZURE_VM_PUBLISH_PROFILE }}
+        remote-script: |
+          cd /path/to/your/app
+          git pull
+          npm ci
+          npm run start
