@@ -7,3 +7,5 @@ The database reads and writes are entirely done using raw SQL without the use of
 The challenge was fun and opened the gates of new learning for me personally. Would love to work on more such challenges.
 
 If you see some new content below this line, it means that changes have been made into the project after completing the challenge to further take it to new levels.
+
+I am adding a CI/CD pipeline for learning.
