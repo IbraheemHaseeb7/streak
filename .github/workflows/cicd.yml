@@ -20,7 +20,7 @@ jobs:
           VM_SECRET: ${{ secrets.VM_SECRET }}
           VM_ADDRESS: ${{ secrets.VM_ADDRESS }}
         run: |
-          ssh -i $env:VM_SECRET $env:VM_ADDRESS &&
+          ssh -i $VM_SECRET $VM_ADDRESS &&
           yes &&
           touch test.txt
           
