@@ -19,13 +19,6 @@ jobs:
               run: |
                   npm ci
 
-            - name: Upload artifact
-              uses: actions/upload-artifact@v2
-              with:
-                  name: dist
-                  path: |
-                      **/!(node_modules)/**
-
     save-as-package:
         needs: build
         runs-on: ubuntu-latest
@@ -34,25 +27,25 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
 
-            - name: Download artifact
-              uses: actions/download-artifact@v4
+            - name: Login to GHCR
+              uses: docker/login-action@v2
               with:
-                  name: dist
-                  path: .
-                  run-id: ${{ github.event.workflow_run.id }}
+                  registry: ghcr.io
+                  username: ${{ github.repository_owner }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
 
-        # - name: Azure VM deployment
-        #   uses: azure/login@v1
-        #   with:
-        #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+            - name: Extracting tags and meta data for docker
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ghcr.io/${{ github.repository }}/streak
+                  tags: |
+                      type=sha,format=long,prefix=
 
-        # - name: Deploy to Azure VM
-        #   uses: azure/webapps-deploy@v2
-        #   with:
-        #     app-name: github-actions
-        #     publish-profile: ${{ secrets.AZURE_VM_PUBLISH_PROFILE }}
-        #     remote-script: |
-        #       cd /path/to/your/app
-        #       git pull
-        #       npm ci
-        #       npm run start
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  push: true
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
