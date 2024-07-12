@@ -1,0 +1,4 @@
+echo "Uploading code"
+git add .
+git commit -m "Update code"
+git push origin main
