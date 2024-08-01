@@ -1,0 +1,1 @@
+Compress-Archive -Path config,controllers,middlewares
