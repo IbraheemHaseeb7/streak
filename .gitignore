@@ -1,2 +1,4 @@
 node_modules
 upload-github.sh
+*.pem
+*.ps1
